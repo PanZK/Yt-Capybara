@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+    <dict>
+        <key>CFBundleDisplayName</key>
+        <string>Yt-Capybara</string>
+        <!-- <key>LSUIElement</key>  -->
+        <!-- <true/> -->
+        <key>CFBundleExecutable</key>
+        <string>Yt-Capybara</string>
+        <key>CFBundleIconFile</key>
+        <string>icons/capybara.icns</string>
+        <key>CFBundleDevelopmentRegion</key>
+        <string>zh_CN</string>
+        <key>CFBundleInfoDictionaryVersion</key>
+        <string>6.0</string>
+        <key>CFBundleName</key>
+        <string>Yt-Capybara</string>
+        <key>CFBundlePackageType</key>
+        <string>APPL</string>
+        <key>CFBundleShortVersionString</key>
+        <string>0.1.0</string>
+		<key>CFBundleVersion</key>
+        <string>0.1.0</string>
+        <!-- <key>DTCompiler</key>
+        <string>com.apple.compilers.llvm.clang.1_0</string>
+		<key>CFBundleIdentifier</key>
+        <string>net.agalwood.Yt-Capybara</string> -->
+        <key>DTSDKBuild</key>
+        <string>12.3</string>
+        <key>DTSDKName</key>
+        <string>macosx12.3</string>
+        <key>LSApplicationCategoryType</key>
+        <string>public.app-category.utilities</string>
+        <key>LSMinimumSystemVersion</key>
+        <string>10.10.0</string>
+        <key>NSHighResolutionCapable</key>
+        <true />
+        <key>NSHumanReadableCopyright</key>
+        <string>基于GPLv3发布
+PanZK 于2025制作</string>
+        <key>NSMainNibFile</key>
+        <string>MainMenu</string>
+        <key>NSPrincipalClass</key>
+        <string>AtomApplication</string>
+        <key>NSQuitAlwaysKeepsWindows</key>
+        <false />
+        <key>NSRequiresAquaSystemAppearance</key>
+        <false />
+        <key>NSSupportsAutomaticGraphicsSwitching</key>
+        <true/>
+    </dict>
+</plist>

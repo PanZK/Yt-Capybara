@@ -1,0 +1,16 @@
+[Desktop Entry]
+Type=Application
+Name=Ashore
+Name[zh_CN]=Yt-Capybara
+Version = 0.0.01
+GenericName=Video Download manager
+GenericName[zh_CN]=视频下载管理器
+GenericName[zh_TW]=视频下载管理器
+Comment=video download manager
+Comment[zh_CN]=视频下载管理器
+Comment[zh_TW]=视频下载管理器
+Icon=/opt/Yt-Capybara/icons/capybara.png
+Exec=/opt/Yt-Capybara/Yt-Capybara
+Terminal=false
+Categories=Download;Manager;
+Keywords=download;yt-dlp;ffmpeg;下载;Yt-Capybara;

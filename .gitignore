@@ -1,0 +1,10 @@
+
+__pycache__
+dist
+build
+*.bak
+*.temp
+test*
+make.sh
+makedmg.sh
+output
