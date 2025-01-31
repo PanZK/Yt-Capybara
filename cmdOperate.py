@@ -13,7 +13,7 @@ import subprocess, os, platform
 class CmdOperate():
     haveYt_dlp, haveFfmpeg = False, False
     yt_dlpVersion, ffmpegVersion = None, None
-    yt_dlpExe, ffmpegExe = 'yt_dlp', 'ffmpeg'
+    yt_dlpExe, ffmpegExe = 'yt-dlp', 'ffmpeg'
 
     def __init__(self):
         if platform.system() == 'Darwin':

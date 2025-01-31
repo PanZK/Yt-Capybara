@@ -13,6 +13,7 @@ from PySide6.QtWidgets import QWidget, QApplication, QVBoxLayout, QHBoxLayout, Q
 from PySide6.QtCore import Qt, Signal, Slot
 from qfluentwidgets import PushButton, CheckBox, RadioButton, ComboBox, LineEdit, CommandBar, Action, FluentIcon, BodyLabel, StrongBodyLabel
 
+browsersList = ['None', 'firefox', 'chrome', 'edge']
 
 def validateUrl(url):
     pattern = re.compile(r'^https?://([a-zA-Z0-9-]+\.)+[a-zA-Z0-9]{2,4}(/\S*)?$')
@@ -121,6 +122,9 @@ class ParameterWidget(QWidget):
         checkBoxesLayout.addWidget(self.subsChckBx, 1, 1)
         checkBoxesLayout.setContentsMargins(20, 5, 20, 5)
         formLayout.addRow(BodyLabel('Video options'), checkBoxesLayout)
+        self.cookiesComboBox = ComboBox()
+        self.cookiesComboBox.addItems(browsersList)
+        formLayout.addRow(BodyLabel('Cookies options'), self.cookiesComboBox)
         commandTitleLabel = StrongBodyLabel('<h3>Command</h3>')
         commandTitleLabel.setFixedHeight(20)
         commandTitleLabel.setContentsMargins(0,0,0,0)
@@ -161,6 +165,7 @@ class ParameterWidget(QWidget):
         self.thumbnailChckBx.checkStateChanged.connect(self.slotParamererChanged)
         self.metadataChckBx.checkStateChanged.connect(self.slotParamererChanged)
         self.subsChckBx.checkStateChanged.connect(self.slotParamererChanged)
+        self.cookiesComboBox.currentIndexChanged.connect(self.slotParamererChanged)
 
     def setOptionsByVorA(self, VandA:bool):
         self.transcodeChckBx.setEnabled(VandA)
@@ -182,20 +187,26 @@ class ParameterWidget(QWidget):
     def slotGenerateCmd(self):
         url = self.urlEditor.text()
         if url == '':
-            self.message.emit('Empty url')
+            if self.urlEditor.placeholderText() == 'url' or self.urlEditor.placeholderText() == '':
+                self.message.emit('Empty url')
+            else:
+                url = self.urlEditor.placeholderText()
         elif not validateUrl(url):
             self.message.emit('Invalid url')
         else:
             # cmd = 'yt-dlp '
             cmd = self.yt_dlpExe + ' '
             if self.presetComboBox.currentIndex() == 0:
-                preset = "bestvideo+bestaudio"
+                preset = " bestvideo+bestaudio"
             proxy = ''
             if self.proxyLineEdit.text() != '':
                 proxy = f' --proxy "{self.proxyLineEdit.text()}"'
-            path = 'Downloads/'
+            path = os.path.join(os.path.expanduser('~'), '')
             if self.pathLineEdit.text() != '':
-                path = self.pathLineEdit.text() + '/'
+                path = os.path.join(self.pathLineEdit.text(), '')
+            cookies = ''
+            if self.cookiesComboBox.currentIndex() != 0:
+                cookies = f' --cookies-from-browser {browsersList[self.cookiesComboBox.currentIndex()]}'
             if self.videoAndAudio:
                 thumbnail = ''
                 if self.thumbnailChckBx.isChecked():
@@ -209,9 +220,9 @@ class ParameterWidget(QWidget):
                 transcode = ''
                 if self.transcodeChckBx.isChecked():
                     transcode = ' --merge-output-format mp4'
-                cmd += f'-f {preset}{proxy}{thumbnail}{metadata}{subs}{transcode} -o "{path}%(title)s.%(ext)s" "{url}"'
+                cmd += f'-f{preset}{cookies}{proxy}{thumbnail}{metadata}{subs}{transcode} -o "{path}%(title)s.%(ext)s" "{url}"'
             else:
-                cmd += f'-x --audio-format mp3 "{url}"{proxy} -o "{path}%(title)s.%(ext)s"'
+                cmd += f'-x --audio-format mp3 "{url}"{cookies}{proxy} -o "{path}%(title)s.%(ext)s"'
             self.cmdLabel.setText(cmd)
             self.message.emit('Generated cmd')
 
@@ -251,7 +262,6 @@ class CmdLabel(QLabel):
         super().__init__(argu)
         self.setWordWrap(True)
         self.setStyleSheet('CmdLabel{border: 1px solid #919191;border-radius: 5px;color:#dbdbdb;background-color:#031c0a}')
-        # self.setMargin(0,-100,0,0)
 
     # rebuild the event of mouse lef button clicked, to copy download commond to clipboard.
     def mouseReleaseEvent(self, QMouseEvent):
