@@ -24,9 +24,9 @@ class ParameterWidget(QWidget):
     message = Signal(str)
     videoAndAudio = True
 
-    def __init__(self, haveYt_dlp:bool=False, haveFfmpeg:bool=False, yt_dlpExe:str='yt-dlp'):
+    def __init__(self, haveYt_dlp:bool=False, haveFfmpeg:bool=False, yt_dlpExe:str='yt-dlp', ffmpegExe:str='ffmpeg'):
         super().__init__()
-        self.haveYt_dlp, self.haveFfmpeg, self.yt_dlpExe = haveYt_dlp, haveFfmpeg, yt_dlpExe
+        self.haveYt_dlp, self.haveFfmpeg, self.yt_dlpExe, self.ffmpegExe = haveYt_dlp, haveFfmpeg, yt_dlpExe, ffmpegExe
         self.initUI()
         self.setConnections()
 
@@ -186,48 +186,54 @@ class ParameterWidget(QWidget):
     @Slot()
     def slotGenerateCmd(self):
         url = self.urlEditor.text()
+        if not validateUrl(url):
+            self.message.emit('Invalid url')
+            return
         if url == '':
             if self.urlEditor.placeholderText() == 'url' or self.urlEditor.placeholderText() == '':
                 self.message.emit('Empty url')
+                return
             else:
+                self.urlEditor.setText(self.urlEditor.placeholderText())
                 url = self.urlEditor.placeholderText()
-        elif not validateUrl(url):
-            self.message.emit('Invalid url')
-        else:
-            # cmd = 'yt-dlp '
-            cmd = self.yt_dlpExe + ' '
-            if self.presetComboBox.currentIndex() == 0:
-                preset = " bestvideo+bestaudio"
-            proxy = ''
-            if self.proxyLineEdit.text() != '':
-                proxy = f' --proxy "{self.proxyLineEdit.text()}"'
-            path = os.path.join(os.path.expanduser('~'), '')
-            if self.pathLineEdit.text() != '':
-                path = os.path.join(self.pathLineEdit.text(), '')
-            cookies = ''
-            if self.cookiesComboBox.currentIndex() != 0:
-                cookies = f' --cookies-from-browser {browsersList[self.cookiesComboBox.currentIndex()]}'
-            if self.videoAndAudio:
-                thumbnail = ''
-                if self.thumbnailChckBx.isChecked():
-                    thumbnail = ' --embed-thumbnail'
-                metadata = ''
-                if self.metadataChckBx.isChecked():
-                    metadata = ' --embed-metadata'
-                subs = ''
-                if self.subsChckBx.isChecked():
-                    subs = ' --embed-subs'
-                transcode = ''
-                if self.transcodeChckBx.isChecked():
-                    transcode = ' --merge-output-format mp4'
-                cmd += f'-f{preset}{cookies}{proxy}{thumbnail}{metadata}{subs}{transcode} -o "{path}%(title)s.%(ext)s" "{url}"'
-            else:
-                cmd += f'-x --audio-format mp3 "{url}"{cookies}{proxy} -o "{path}%(title)s.%(ext)s"'
-            self.cmdLabel.setText(cmd)
-            self.message.emit('Generated cmd')
 
-            if self.haveYt_dlp:
-                self.downloadBtn.setEnabled(True)
+        # cmd = 'yt-dlp '
+        cmd = self.yt_dlpExe + ' '
+        if self.presetComboBox.currentIndex() == 0:
+            preset = " bestvideo+bestaudio"
+        proxy = ''
+        if self.proxyLineEdit.text() != '':
+            proxy = f' --proxy "{self.proxyLineEdit.text()}"'
+        path = os.path.join(os.path.expanduser('~'), '')
+        if self.pathLineEdit.text() != '':
+            path = os.path.join(self.pathLineEdit.text(), '')
+        cookies = ''
+        if self.cookiesComboBox.currentIndex() != 0:
+            cookies = f' --cookies-from-browser {browsersList[self.cookiesComboBox.currentIndex()]}'
+        if self.videoAndAudio:
+            thumbnail = ''
+            if self.thumbnailChckBx.isChecked():
+                thumbnail = ' --embed-thumbnail'
+            metadata = ''
+            if self.metadataChckBx.isChecked():
+                metadata = ' --embed-metadata'
+            subs = ''
+            if self.subsChckBx.isChecked():
+                subs = ' --embed-subs'
+            transcode = ''
+            if self.transcodeChckBx.isChecked():
+                if self.ffmpegExe == 'ffmpeg':
+                    transcode = ' --merge-output-format mp4'
+                else:
+                    transcode = f' --merge-output-format mp4 --ffmpeg-location "{self.ffmpegExe}"'
+            cmd += f'-f{preset}{cookies}{proxy}{thumbnail}{metadata}{subs}{transcode} -o "{path}%(title)s.%(ext)s" "{url}"'
+        else:
+            cmd += f'-x --audio-format mp3 "{url}"{cookies}{proxy} -o "{path}%(title)s.%(ext)s"'
+        self.cmdLabel.setText(cmd)
+        self.message.emit('Generated cmd')
+
+        if self.haveYt_dlp:
+            self.downloadBtn.setEnabled(True)
 
     @Slot()
     def slotUrlCheck(self, url):

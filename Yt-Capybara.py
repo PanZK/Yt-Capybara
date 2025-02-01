@@ -70,7 +70,10 @@ class Yt_Capybara(QMainWindow):
             self.setPalette(self.depictTheme(True))
         else:
             self.setPalette(self.depictTheme(False))
-        self.mainWidget = ParameterWidget(self.cmdOperate.haveYt_dlp, self.cmdOperate.haveFfmpeg, self.cmdOperate.yt_dlpExe)
+        self.mainWidget = ParameterWidget(self.cmdOperate.haveYt_dlp, 
+                                          self.cmdOperate.haveFfmpeg, 
+                                          self.cmdOperate.yt_dlpExe, 
+                                          self.cmdOperate.ffmpegExe)
         
         self.setCentralWidget(self.mainWidget)
         self.setWindowTitle('Yt-Capybara')
@@ -88,6 +91,7 @@ class Yt_Capybara(QMainWindow):
         self.yt_dlpLabel = QLabel()
         self.yt_dlpLabel.setMinimumWidth(80)
         self.yt_dlpLabel.setToolTip('status of yt-dlp')
+        self.yt_dlpLabel.setToolTip(self.cmdOperate.yt_dlpExe)
         if self.cmdOperate.haveYt_dlp:
             self.yt_dlpIcon.setStyleSheet('border-radius: 5px; border:1px solid #0000005e; background:#16e384')
             self.yt_dlpIcon.setStatusTip('installed yt-dlp')
@@ -106,6 +110,7 @@ class Yt_Capybara(QMainWindow):
         self.ffmpegLabel = QLabel()
         self.ffmpegLabel.setMinimumWidth(80)
         self.ffmpegLabel.setToolTip('status of ffmpeg')
+        self.ffmpegLabel.setToolTip(self.cmdOperate.ffmpegExe)
 
         if self.cmdOperate.haveFfmpeg:
             self.ffmpegIcon.setStyleSheet('border-radius: 5px; border:1px solid #0000005e; background:#16e384')
