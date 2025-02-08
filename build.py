@@ -99,6 +99,11 @@ if __name__ == '__main__':
             shutil.rmtree('dist/Yt-Capybara.onefile-build', True)
             shutil.rmtree('dist/Yt-Capybara.build', True)
             print('......使用 Nuitka 编译程序为单文件和文件夹......完成')
+            print('......正在打包压缩为 Yt-Capybara.Linux.folder.tar.xz ......')
+            os.system('tar -cJf dist/Yt-Capybara.Linux.folder.tar.xz dist/Yt-Capybara.Linux.Nuitka.folder')
+            print('......正在打包压缩为 Yt-Capybara.Linux.onefile.tar.xz ......')
+            os.system('tar -cJf dist/Yt-Capybara.Linux.onefile.tar.xz dist/Yt-Capybara.Linux.Nuitka.onefile')
+            print('......打包完成 ......')
 
         elif flag == '2':
             print('......使用 PyInstaller 仅打包为 单文件 程序......')
